@@ -1,30 +1,77 @@
 package com.rabindra.studinfomgmt.entity;
 
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import javax.persistence.*;
+import java.util.List;
+import java.util.Date;
 
 @Entity
+@Getter
+//@Setter
+@Data
 @Table(name="student")
 public class Student {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    int id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-    @Column(name="name")
-    String name;
+    @Column(name="first_name")
+    private String firstName;
+
+
+    @Column(name="last_name")
+    private String lastName;
+
 
     @Column(name = "email")
-    String email;
+    private String email;
 
     @Column(name = "address")
-    String address;
+    private String address;
 
     @Column(name="birthdate")
-    Date birthdate;
+    private Date birthdate;
 
     @Column(name="enrollmentDate")
-    Date enrollmentDate;
-    List<Attendance> attendances;
-    List<Grade> grades;
+    private Date enrollmentDate;
+    @ManyToMany
+    @JoinTable(
+            name = "student_course",
+            joinColumns = @JoinColumn(name = "student_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private List<Course> courses;
 
+    @Column(name = "total_attendance", nullable = false)
+    private int totalAttendance;
+
+    @OneToMany(mappedBy = "student")
+    private List<Grade> grades;
+
+    @OneToMany(mappedBy = "student")
+    private List<Attendance> attendances;
+
+    /////////////////////////////////////////
+
+
+    @Override
+    public String toString() {
+        return "Student{" +
+                "id=" + id +
+                ", firstName='" + firstName + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", address='" + address + '\'' +
+                ", birthdate=" + birthdate +
+                ", enrollmentDate=" + enrollmentDate +
+                ", courses=" + courses +
+                ", totalAttendance=" + totalAttendance +
+                ", grades=" + grades +
+                ", attendances=" + attendances +
+                '}';
+    }
 }
